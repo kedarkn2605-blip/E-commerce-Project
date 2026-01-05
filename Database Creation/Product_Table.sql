@@ -1,16 +1,15 @@
-create table e_commerce.product (
-product_id int primary key,
-product_name varchar(50),
-MRP float,
-stock bool,
-brand varchar(255),
-customer_id int,
-seller_id int,
-FOREIGN KEY (customer_id) REFERENCES customer(customer_id) on delete set null on update no action,
-FOREIGN KEY (seller_id) REFERENCES seller(seller_id) on delete set null on update no action
+CREATE TABLE product (
+  product_id NUMBER PRIMARY KEY,
+  product_name VARCHAR2(50),
+  MRP NUMBER(10,2),
+  stock NUMBER,
+  brand VARCHAR2(255),
+  category_id NUMBER,
+  seller_id NUMBER,
+  FOREIGN KEY (category_id)
+    REFERENCES category(category_id)
+    ON DELETE SET NULL,
+  FOREIGN KEY (seller_id)
+    REFERENCES seller(seller_id)
+    ON DELETE SET NULL
 );
-
-alter table e_commerce.product
-drop constraint product_ibfk_1 ;
-alter table e_commerce.product
-drop constraint product_ibfk_2 ;
