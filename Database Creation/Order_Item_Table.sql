@@ -1,9 +1,13 @@
-create table e_commerce.orderitem(
-order_id int,
-product_id int,
-foreign key (order_id) references order_table(order_id) on delete set null on update no action,
-foreign key (product_id) references product(product_id) on delete set null on update no action,
-MRP float,
-quantity int
-
+CREATE TABLE orderitem (
+  order_id NUMBER,
+  product_id NUMBER,
+  MRP NUMBER(10,2),
+  quantity NUMBER,
+  PRIMARY KEY (order_id, product_id),
+  FOREIGN KEY (order_id)
+    REFERENCES order_table(order_id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (product_id)
+    REFERENCES product(product_id)
+    ON DELETE CASCADE
 );
