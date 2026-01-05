@@ -6,375 +6,333 @@
 -- Project: E-Commerce Database Management System
 -- ========================================
 
-USE e_commerce;
+/*MULTIPLE TABLE JOIN OPERATIONS — 9 Queries*/
+--Q1. Write a SQL query to display customer name, product name, and order amount for all delivered orders.
+SELECT c.FirstName, p.product_name, o.order_amount
+FROM customer c, product p, cart ca, order_table o
+WHERE c.customer_id = ca.customer_id
+  AND ca.product_id = p.product_id
+  AND ca.cart_id = o.cart_id
+  AND o.order_status = 'delivery';
+  
+--Q2. Write a SQL query to list customer name, city, and order date.
+SELECT c.FirstName, a.city, o.order_date
+FROM customer c, address a, order_table o
+WHERE c.customer_id = a.customer_id
+  AND c.customer_id = o.customer_id;
 
--- ========================================
--- SECTION 1: MULTIPLE TABLE JOIN OPERATIONS (6 Queries)
--- ========================================
+--Q3. Write a SQL query to show product name, category name, and seller name.
+SELECT p.product_name, cat.category_name, s.seller_name
+FROM product p, category cat, seller s
+WHERE p.category_id = cat.category_id
+  AND p.seller_id = s.seller_id;
 
--- Query 1: Get customer name, product name, and order details
-SELECT c.FirstName, c. LastName, p.product_name, o.order_date, o.order_amount
-FROM customer c
-JOIN order_table o ON c.customer_id = o.customer_id
-JOIN cart ct ON o.cart_id = ct.cart_id
-JOIN product p ON ct.product_id = p.product_id;
+--Q4. Write a SQL query to display customer name, payment mode, and payment date.
+SELECT c.FirstName, pay.paymentMode, pay.dateofpayment
+FROM customer c, payment pay
+WHERE c.customer_id = pay.customer_id;
 
--- Query 2: Get seller name, product name, and category for all products
-SELECT s.seller_name, p.product_name, cat.category_name, p.MRP
-FROM seller s
-JOIN product p ON s.seller_id = p.seller_id
-JOIN category cat ON p.category_id = cat.category_id;
+--Q5. Write a SQL query to display product name, review rating, and customer name.
+SELECT p.product_name, r.rating, c.FirstName
+FROM product p, review r, customer c
+WHERE p.product_id = r.product_id
+  AND r.customer_id = c.customer_id;
 
--- Query 3: Get customer name, address, and their orders
-SELECT c.FirstName, c.LastName, a.city, a.state, o.order_id, o.order_amount
-FROM customer c
-JOIN address a ON c.customer_id = a.customer_id
-JOIN order_table o ON c.customer_id = o.customer_id;
+--Q6. Write a SQL query to list seller name, product name, and stock.
+SELECT s.seller_name, p.product_name, p.stock
+FROM seller s, product p
+WHERE s.seller_id = p.seller_id;
 
--- Query 4: Get product reviews with customer and product details
-SELECT c.FirstName, c.LastName, p.product_name, r.rating, r.description
-FROM customer c
-JOIN review r ON c.customer_id = r.customer_id
-JOIN product p ON r.product_id = p.product_id;
+--Q7. Write a SQL query to display order id, customer name, and total amount.
+SELECT o.order_id, c.FirstName, o.order_amount
+FROM order_table o, customer c
+WHERE o.customer_id = c.customer_id;
 
--- Query 5: Get payment details with customer and order information
-SELECT c.FirstName, c.LastName, o.order_id, o.order_amount, 
-       pay.paymentMode, pay.dateofpayment
-FROM customer c
-JOIN order_table o ON c.customer_id = o.customer_id
-JOIN payment pay ON o.order_id = pay.order_id;
+--Q8. Write a SQL query to show product name, order quantity, and order date.
+SELECT p.product_name, oi.quantity, o.order_date
+FROM product p, orderitem oi, order_table o
+WHERE p.product_id = oi.product_id
+  AND oi.order_id = o.order_id;
 
--- Query 6: Get complete order details with all related information (4-table join)
-SELECT c.FirstName, c.LastName, p.product_name, s.seller_name, 
-       o.order_amount, o.order_status, pay.paymentMode
-FROM customer c
-JOIN order_table o ON c.customer_id = o.customer_id
-JOIN cart ct ON o.cart_id = ct.cart_id
-JOIN product p ON ct.product_id = p.product_id
-JOIN seller s ON p.seller_id = s.seller_id
-JOIN payment pay ON o.order_id = pay.order_id;
+--Q9. Write a SQL query to list customer name, product name, and seller name.
+SELECT c.FirstName, p.product_name, s.seller_name
+FROM customer c, cart ca, product p, seller s
+WHERE c.customer_id = ca.customer_id
+  AND ca.product_id = p.product_id
+  AND p.seller_id = s.seller_id;
 
+/*2) DIFFERENT OPERATORS — 9 Queries*/
 
--- ========================================
--- SECTION 2: DIFFERENT OPERATORS (7 Queries)
--- ========================================
+--Q10. Write a SQL query to find products priced greater than 5000.
+SELECT product_name, MRP
+FROM product
+WHERE MRP > 5000;
 
--- Query 1: Products with MRP greater than 1000 (Comparison Operator:  >)
-SELECT product_name, MRP, brand 
-FROM product 
-WHERE MRP > 1000;
+--Q11. Write a SQL query to list customers whose age is not updated.
+SELECT FirstName
+FROM customer
+WHERE age = 0;
 
--- Query 2: Customers born between 2003 and 2005 (BETWEEN Operator)
-SELECT FirstName, LastName, DateOfBirth 
-FROM customer 
-WHERE DateOfBirth BETWEEN '2003-01-01' AND '2005-12-31';
+--Q12. Write a SQL query to find products between 1000 and 3000.
+SELECT product_name, MRP
+FROM product
+WHERE MRP BETWEEN 1000 AND 3000;
 
--- Query 3: Products from specific brands (IN Operator)
-SELECT product_name, brand, MRP 
-FROM product 
-WHERE brand IN ('Apple', 'Samsung', 'Dell', 'HP');
+--Q13. Write a SQL query to find sellers with total sales above 60000.
+SELECT seller_name
+FROM seller
+WHERE total_sales > 60000;
 
--- Query 4: Products with names containing 'phone' or 'laptop' (LIKE Operator)
-SELECT product_name, MRP, brand 
-FROM product 
-WHERE product_name LIKE '%phone%' OR product_name LIKE '%laptop%';
+--Q14. Write a SQL query to find customers from Karnataka or Maharashtra.
+SELECT FirstName
+FROM customer c, address a
+WHERE c.customer_id = a.customer_id
+  AND a.state IN ('Karnataka','Maharashtra');
 
--- Query 5: Orders that are not delivered (NOT Operator / != Operator)
-SELECT order_id, customer_id, order_amount, order_status 
-FROM order_table 
+--Q15. Write a SQL query to find products whose name starts with ‘S’.
+SELECT product_name
+FROM product
+WHERE product_name LIKE 'S%';
+
+--Q16. Write a SQL query to find orders not delivered.
+SELECT order_id
+FROM order_table
 WHERE order_status != 'delivery';
 
--- Query 6: Products with stock available (IS NOT NULL and Logical AND)
-SELECT product_name, stock, MRP 
-FROM product 
-WHERE stock IS NOT NULL AND stock > 0;
+--Q17. Write a SQL query to list reviews with rating >= 4.
+SELECT description
+FROM review
+WHERE rating >= 4;
 
--- Query 7: Customers from Mumbai (Logical AND Operator)
-SELECT c.FirstName, c.LastName, a.city, a.state 
-FROM customer c
-JOIN address a ON c.customer_id = a. customer_id
-WHERE a.city = 'mumbai' AND a.state = 'maharashtra';
+--Q18. Write a SQL query to find customers whose email contains 'gmail'.
+SELECT FirstName
+FROM customer
+WHERE Email LIKE '%gmail%';
 
 
--- ========================================
--- SECTION 3: GROUP BY AND HAVING (13 Queries)
--- ========================================
+/*3) GROUP BY & HAVING — 12 Queries*/
 
--- Query 1: Count of products per category
-SELECT cat.category_name, COUNT(p.product_id) as product_count
-FROM category cat
-LEFT JOIN product p ON cat.category_id = p.category_id
-GROUP BY cat.category_name;
+--Q19. Write a SQL query to find number of products in each category.
+SELECT category_id, COUNT(*) 
+FROM product
+GROUP BY category_id;
 
--- Query 2: Average MRP per category
-SELECT cat.category_name, AVG(p.MRP) as avg_price
-FROM category cat
-JOIN product p ON cat.category_id = p.category_id
-GROUP BY cat.category_name;
+--Q20. Write a SQL query to find average product price per seller.
+SELECT seller_id, AVG(MRP)
+FROM product
+GROUP BY seller_id;
 
--- Query 3: Total sales amount per seller
-SELECT s.seller_name, SUM(s.total_sales) as total_revenue
-FROM seller s
-GROUP BY s.seller_name;
+--Q21. Write a SQL query to find customers who placed more than one order.
+SELECT customer_id, COUNT(order_id)
+FROM order_table
+GROUP BY customer_id
+HAVING COUNT(order_id) > 1;
 
--- Query 4: Count of orders per customer
-SELECT c.FirstName, c.LastName, COUNT(o. order_id) as order_count
-FROM customer c
-LEFT JOIN order_table o ON c. customer_id = o.customer_id
-GROUP BY c.customer_id, c.FirstName, c.LastName;
+--Q22. Write a SQL query to find total sales per seller having sales above 50000.
+SELECT seller_name, total_sales
+FROM seller
+GROUP BY seller_name, total_sales
+HAVING total_sales > 50000;
 
--- Query 5: Categories with more than 2 products (HAVING clause)
-SELECT cat.category_name, COUNT(p.product_id) as product_count
-FROM category cat
-JOIN product p ON cat.category_id = p.category_id
-GROUP BY cat.category_name
-HAVING COUNT(p.product_id) > 2;
+--Q23. Write a SQL query to find number of reviews per product.
+SELECT product_id, COUNT(review_id)
+FROM review
+GROUP BY product_id;
 
--- Query 6: Average rating per product
-SELECT p.product_name, AVG(CAST(r.rating AS DECIMAL(3,2))) as avg_rating
-FROM product p
-LEFT JOIN review r ON p.product_id = r.product_id
-GROUP BY p.product_id, p.product_name;
+--Q24. Write a SQL query to find average rating per product having average rating above 4.
+SELECT product_id, AVG(rating)
+FROM review
+GROUP BY product_id
+HAVING AVG(rating) > 4;
 
--- Query 7: Products with average rating above 4 (HAVING with aggregate)
-SELECT p.product_name, AVG(CAST(r. rating AS DECIMAL(3,2))) as avg_rating
-FROM product p
-JOIN review r ON p.product_id = r.product_id
-GROUP BY p.product_id, p.product_name
-HAVING AVG(CAST(r.rating AS DECIMAL(3,2))) > 4;
+--Q25. Write a SQL query to find total order amount per customer.
+SELECT customer_id, SUM(order_amount)
+FROM order_table
+GROUP BY customer_id;
 
--- Query 8: Total order amount per customer
-SELECT c.FirstName, c.LastName, SUM(o.order_amount) as total_spent
-FROM customer c
-JOIN order_table o ON c.customer_id = o.customer_id
-GROUP BY c.customer_id, c.FirstName, c. LastName;
+--Q26. Write a SQL query to find products ordered more than once.
+SELECT product_id, COUNT(order_id)
+FROM orderitem
+GROUP BY product_id
+HAVING COUNT(order_id) > 1;
 
--- Query 9:  Customers who spent more than 10000 (HAVING with SUM)
-SELECT c.FirstName, c.LastName, SUM(o.order_amount) as total_spent
-FROM customer c
-JOIN order_table o ON c. customer_id = o.customer_id
-GROUP BY c.customer_id, c.FirstName, c.LastName
-HAVING SUM(o.order_amount) > 10000;
-
--- Query 10: Count of orders by payment mode
-SELECT paymentMode, COUNT(*) as payment_count
+--Q27. Write a SQL query to find payment mode usage count.
+SELECT paymentMode, COUNT(*)
 FROM payment
 GROUP BY paymentMode;
 
--- Query 11: City-wise customer count
-SELECT a.city, COUNT(DISTINCT a.customer_id) as customer_count
-FROM address a
-GROUP BY a.city;
+--Q28. Write a SQL query to find cities having more than one customer.
+SELECT city, COUNT(customer_id)
+FROM address
+GROUP BY city
+HAVING COUNT(customer_id) > 1;
 
--- Query 12: Sellers with total sales greater than 10000 (HAVING with WHERE-like condition)
-SELECT seller_name, total_sales
-FROM seller
-GROUP BY seller_id, seller_name, total_sales
-HAVING total_sales > 10000;
+--Q29. Write a SQL query to find total quantity ordered per product.
+SELECT product_id, SUM(quantity)
+FROM orderitem
+GROUP BY product_id;
 
--- Query 13: Maximum order amount per customer
-SELECT c. FirstName, c.LastName, MAX(o.order_amount) as highest_order
-FROM customer c
-JOIN order_table o ON c.customer_id = o.customer_id
-GROUP BY c.customer_id, c.FirstName, c.LastName;
+--Q30. Write a SQL query to find sellers selling more than one product.
+SELECT seller_id, COUNT(product_id)
+FROM product
+GROUP BY seller_id
+HAVING COUNT(product_id) > 1;
+
+/*4) SUB-QUERIES & CORRELATED NESTED QUERIES — 18 Queries*/
 
 
--- ========================================
--- SECTION 4: SUB-QUERIES & CORRELATED NESTED QUERIES (20 Queries)
--- ========================================
+--Q31. Write a SQL query to find customers who placed orders.
+SELECT FirstName
+FROM customer
+WHERE customer_id IN (SELECT customer_id FROM order_table);
 
--- Query 1: Customers who placed orders above average order amount (Simple Subquery)
-SELECT FirstName, LastName 
-FROM customer 
-WHERE customer_id IN (
-    SELECT customer_id 
-    FROM order_table 
-    WHERE order_amount > (SELECT AVG(order_amount) FROM order_table)
-);
-
--- Query 2: Products with MRP higher than average MRP (Simple Subquery with comparison)
-SELECT product_name, MRP 
-FROM product 
+--Q32. Write a SQL query to find products with price higher than average price.
+SELECT product_name
+FROM product
 WHERE MRP > (SELECT AVG(MRP) FROM product);
 
--- Query 3: Find the most expensive product (Subquery with MAX)
-SELECT product_name, MRP 
-FROM product 
+--Q33. Write a SQL query to find customers who paid online.
+SELECT FirstName
+FROM customer
+WHERE customer_id IN
+ (SELECT customer_id FROM payment WHERE paymentMode='online');
+
+--Q34. Write a SQL query to find sellers with products in cart.
+SELECT seller_name
+FROM seller
+WHERE seller_id IN
+ (SELECT seller_id FROM product WHERE product_id IN
+   (SELECT product_id FROM cart));
+
+--Q35. Write a SQL query to find customers who reviewed products.
+SELECT FirstName
+FROM customer
+WHERE customer_id IN (SELECT customer_id FROM review);
+
+--Q36. Write a SQL query to find highest priced product.
+SELECT product_name
+FROM product
 WHERE MRP = (SELECT MAX(MRP) FROM product);
 
--- Query 4: Customers who have never placed an order (NOT IN Subquery)
-SELECT FirstName, LastName 
-FROM customer 
-WHERE customer_id NOT IN (SELECT DISTINCT customer_id FROM order_table WHERE customer_id IS NOT NULL);
+--Q37. Write a SQL query to find customers having more orders than average.
+SELECT customer_id
+FROM order_table
+GROUP BY customer_id
+HAVING COUNT(order_id) >
+ (SELECT AVG(COUNT(order_id)) FROM order_table GROUP BY customer_id);
 
--- Query 5: Products that have never been reviewed (NOT IN Subquery)
-SELECT product_name 
-FROM product 
-WHERE product_id NOT IN (SELECT DISTINCT product_id FROM review WHERE product_id IS NOT NULL);
-
--- Query 6: Sellers whose products have been ordered (IN with nested joins)
-SELECT seller_name 
-FROM seller 
-WHERE seller_id IN (
-    SELECT DISTINCT p.seller_id 
-    FROM product p 
-    JOIN cart c ON p.product_id = c.product_id
-);
-
--- Query 7: Categories with products priced above 5000 (Subquery with WHERE)
-SELECT category_name 
-FROM category 
-WHERE category_id IN (
-    SELECT category_id 
-    FROM product 
-    WHERE MRP > 5000
-);
-
--- Query 8: Correlated Subquery - Find customers who spent more than their city's average
-SELECT c.FirstName, c. LastName, a.city
-FROM customer c
-JOIN address a ON c.customer_id = a. customer_id
-WHERE (
-    SELECT COALESCE(SUM(o.order_amount), 0)
-    FROM order_table o
-    WHERE o.customer_id = c.customer_id
-) > (
-    SELECT AVG(o2.order_amount)
-    FROM order_table o2
-    JOIN customer c2 ON o2.customer_id = c2.customer_id
-    JOIN address a2 ON c2.customer_id = a2.customer_id
-    WHERE a2.city = a. city
-);
-
--- Query 9: Find products sold by the seller with highest total sales (Nested subquery)
-SELECT product_name, MRP 
-FROM product 
-WHERE seller_id = (
-    SELECT seller_id 
-    FROM seller 
-    WHERE total_sales = (SELECT MAX(total_sales) FROM seller)
-);
-
--- Query 10:  Customers who ordered products from category 'Mobiles & Computer' (Multi-level nested)
-SELECT FirstName, LastName 
-FROM customer 
-WHERE customer_id IN (
-    SELECT o.customer_id 
-    FROM order_table o
-    JOIN cart c ON o.cart_id = c.cart_id
-    JOIN product p ON c. product_id = p.product_id
-    WHERE p.category_id = (
-        SELECT category_id 
-        FROM category 
-        WHERE category_name = 'Mobiles & Computer'
-    )
-);
-
--- Query 11: Products with rating higher than average rating (Subquery with GROUP BY)
-SELECT p.product_name 
-FROM product p
-WHERE p.product_id IN (
-    SELECT r.product_id
-    FROM review r
-    GROUP BY r.product_id
-    HAVING AVG(CAST(r.rating AS DECIMAL(3,2))) > (
-        SELECT AVG(CAST(rating AS DECIMAL(3,2))) FROM review
-    )
-);
-
--- Query 12: Find the second highest priced product (Subquery for ranking)
-SELECT product_name, MRP 
-FROM product 
-WHERE MRP = (
-    SELECT MAX(MRP) 
-    FROM product 
-    WHERE MRP < (SELECT MAX(MRP) FROM product)
-);
-
--- Query 13: Correlated - Products more expensive than avg in their category
-SELECT p1.product_name, p1.MRP, c.category_name
-FROM product p1
-JOIN category c ON p1.category_id = c.category_id
-WHERE p1.MRP > (
-    SELECT AVG(p2.MRP)
-    FROM product p2
-    WHERE p2.category_id = p1.category_id
-);
-
--- Query 14: Correlated - Orders with amount greater than customer's average order
-SELECT o1.order_id, o1.order_amount, c.FirstName
-FROM order_table o1
-JOIN customer c ON o1.customer_id = c.customer_id
-WHERE o1.order_amount > (
-    SELECT AVG(o2.order_amount)
-    FROM order_table o2
-    WHERE o2.customer_id = o1.customer_id
-);
-
--- Query 15: Find sellers who have products in more than one category (Subquery with HAVING)
-SELECT seller_name 
-FROM seller 
-WHERE seller_id IN (
-    SELECT seller_id 
-    FROM product 
-    GROUP BY seller_id 
-    HAVING COUNT(DISTINCT category_id) > 1
-);
-
--- Query 16: Customers who bought products reviewed with 5 stars (Nested IN subqueries)
-SELECT DISTINCT c.FirstName, c. LastName
-FROM customer c
-WHERE c.customer_id IN (
-    SELECT o.customer_id
-    FROM order_table o
-    JOIN cart ct ON o.cart_id = ct.cart_id
-    WHERE ct.product_id IN (
-        SELECT product_id
-        FROM review
-        WHERE rating = '5'
-    )
-);
-
--- Query 17: Products cheaper than all Apple products (ALL operator)
-SELECT product_name, MRP, brand
+--Q38. Write a SQL query to find products not reviewed.
+SELECT product_name
 FROM product
-WHERE MRP < ALL (
-    SELECT MRP 
-    FROM product 
-    WHERE brand = 'Apple'
+WHERE product_id NOT IN (SELECT product_id FROM review);
+
+--Q39. Write a SQL query to find customers from cities having more than one customer.
+SELECT FirstName
+FROM customer c, address a
+WHERE c.customer_id = a.customer_id
+  AND a.city IN (
+    SELECT city FROM address GROUP BY city HAVING COUNT(*) > 1
+  );
+
+--Q40. Write a SQL query to find sellers whose total sales is above average.
+SELECT seller_name
+FROM seller
+WHERE total_sales > (SELECT AVG(total_sales) FROM seller);
+
+--Q41. Write a SQL query to find customers who ordered products costing more than the average product price.
+SELECT DISTINCT c.FirstName
+FROM customer c, cart ca, product p
+WHERE c.customer_id = ca.customer_id
+  AND ca.product_id = p.product_id
+  AND p.MRP >
+      (SELECT AVG(MRP) FROM product);
+--Q42. Write a SQL query to find products whose stock is less than the average stock of all products.
+sql
+Copy code
+SELECT product_name, stock
+FROM product
+WHERE stock <
+      (SELECT AVG(stock) FROM product);
+--Q43. Write a SQL query to find customers who have given the highest rating in reviews.
+sql
+Copy code
+SELECT FirstName
+FROM customer
+WHERE customer_id IN
+ (
+   SELECT customer_id
+   FROM review
+   WHERE rating =
+         (SELECT MAX(rating) FROM review)
+ );
+ 
+--Q44. Write a SQL query to find sellers who sell products ordered by more than one customer.
+sql
+Copy code
+SELECT seller_name
+FROM seller
+WHERE seller_id IN
+(
+  SELECT p.seller_id
+  FROM product p, cart c
+  WHERE p.product_id = c.product_id
+  GROUP BY p.seller_id
+  HAVING COUNT(DISTINCT c.customer_id) > 1
 );
 
--- Query 18: EXISTS - Customers who have written at least one review
-SELECT c.FirstName, c.LastName
-FROM customer c
-WHERE EXISTS (
-    SELECT 1 
-    FROM review r 
-    WHERE r.customer_id = c.customer_id
+--Q45. Write a SQL query to find customers whose total order amount is greater than the average total order amount of all customers.
+sql
+Copy code
+SELECT customer_id
+FROM order_table
+GROUP BY customer_id
+HAVING SUM(order_amount) >
+(
+  SELECT AVG(total_amt)
+  FROM (
+        SELECT SUM(order_amount) AS total_amt
+        FROM order_table
+        GROUP BY customer_id
+       )
 );
 
--- Query 19: NOT EXISTS - Sellers with no products sold
-SELECT s.seller_name
-FROM seller s
-WHERE NOT EXISTS (
-    SELECT 1
-    FROM product p
-    JOIN cart c ON p.product_id = c.product_id
-    WHERE p.seller_id = s.seller_id
+--Q46. Write a SQL query to find products that were ordered in quantities greater than the average quantity ordered.
+sql
+Copy code
+SELECT product_id
+FROM orderitem
+GROUP BY product_id
+HAVING SUM(quantity) >
+(
+  SELECT AVG(quantity)
+  FROM orderitem
+);
+--Q47. Write a SQL query to find customers who live in the same city as the customer named 'Kedar'.
+sql
+Copy code
+SELECT c.FirstName
+FROM customer c, address a
+WHERE c.customer_id = a.customer_id
+  AND a.city =
+      (
+        SELECT a2.city
+        FROM customer c2, address a2
+        WHERE c2.customer_id = a2.customer_id
+          AND c2.FirstName = 'Kedar'
+      );
+--Q48. Write a SQL query to find sellers whose products have received an average rating greater than 4.
+sql
+Copy code
+SELECT seller_name
+FROM seller
+WHERE seller_id IN
+(
+  SELECT p.seller_id
+  FROM product p, review r
+  WHERE p.product_id = r.product_id
+  GROUP BY p.seller_id
+  HAVING AVG(r.rating) > 4
 );
 
--- Query 20: Find products in the same price range as iPhone (Range subquery)
-SELECT p1.product_name, p1.MRP
-FROM product p1
-WHERE p1.MRP BETWEEN (
-    SELECT MRP - 5000 FROM product WHERE product_name = 'i phone 15'
-) AND (
-    SELECT MRP + 5000 FROM product WHERE product_name = 'i phone 15'
-)
-AND p1.product_name != 'i phone 15';
 
 
--- ========================================
--- END OF QUERIES
--- Total Queries: 46 
--- ========================================
