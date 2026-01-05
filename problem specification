@@ -1,0 +1,16 @@
+Mini-World Problem: E-Commerce Database Management System
+
+Description: This system manages an online e-commerce platform where:
+
+Customers can browse products, add items to cart, place orders, and write reviews
+Sellers can list products under various categories
+The system tracks customer addresses, orders, payments, and product inventory
+Reviews help other customers make informed decisions
+Payment modes (online/offline) are supported
+Additional Requirements (add these to make it yours):
+
+Track order delivery status
+Manage product stock availability
+Calculate total sales per seller
+Generate customer purchase history
+Analyze product ratings and reviews
