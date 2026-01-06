@@ -1,12 +1,12 @@
--- ========================================
--- E-COMMERCE DATABASE - SQL QUERIES
--- Student:  Sanskruti-333
--- Student:  Nivrutti-332
--- Student:  Kedar-323
--- Project: E-Commerce Database Management System
+-- ======================================== 
+-- E-COMMERCE DATABASE - SQL QUERIES 
+-- Student:  Sanskruti-333 
+-- Student:  Nivrutti-332 
+-- Student:  Kedar-323 
+-- Project: E-Commerce Database Management System 
 -- ========================================
 
-/*MULTIPLE TABLE JOIN OPERATIONS — 9 Queries*/
+/MULTIPLE TABLE JOIN OPERATIONS — 9 Queries/
 --Q1. Write a SQL query to display customer name, product name, and order amount for all delivered orders.
 SELECT c.FirstName, p.product_name, o.order_amount
 FROM customer c, product p, cart ca, order_table o
@@ -61,7 +61,7 @@ WHERE c.customer_id = ca.customer_id
   AND ca.product_id = p.product_id
   AND p.seller_id = s.seller_id;
 
-/*2) DIFFERENT OPERATORS — 9 Queries*/
+/2) DIFFERENT OPERATORS — 9 Queries/
 
 --Q10. Write a SQL query to find products priced greater than 5000.
 SELECT product_name, MRP
@@ -97,20 +97,20 @@ WHERE product_name LIKE 'S%';
 --Q16. Write a SQL query to find orders not delivered.
 SELECT order_id
 FROM order_table
-WHERE order_status != 'delivery';
+WHERE order_status = 'not delivery';
 
---Q17. Write a SQL query to list reviews with rating >= 4.
+--Q17. Write a SQL query to list reviews with rating > 4.
 SELECT description
 FROM review
-WHERE rating >= 4;
+WHERE rating > 4;
 
---Q18. Write a SQL query to find customers whose email contains 'gmail'.
+--Q18. Write a SQL query to find customers whose email contains '.com'.
 SELECT FirstName
 FROM customer
-WHERE Email LIKE '%gmail%';
+WHERE Email LIKE '%.com%';
 
 
-/*3) GROUP BY & HAVING — 12 Queries*/
+/3) GROUP BY & HAVING — 12 Queries/
 
 --Q19. Write a SQL query to find number of products in each category.
 SELECT category_id, COUNT(*) 
@@ -178,7 +178,7 @@ FROM product
 GROUP BY seller_id
 HAVING COUNT(product_id) > 1;
 
-/*4) SUB-QUERIES & CORRELATED NESTED QUERIES — 18 Queries*/
+/4) SUB-QUERIES & CORRELATED NESTED QUERIES — 18 Queries/
 
 
 --Q31. Write a SQL query to find customers who placed orders.
@@ -247,15 +247,13 @@ WHERE c.customer_id = ca.customer_id
   AND p.MRP >
       (SELECT AVG(MRP) FROM product);
 --Q42. Write a SQL query to find products whose stock is less than the average stock of all products.
-sql
-Copy code
+
 SELECT product_name, stock
 FROM product
 WHERE stock <
       (SELECT AVG(stock) FROM product);
 --Q43. Write a SQL query to find customers who have given the highest rating in reviews.
-sql
-Copy code
+
 SELECT FirstName
 FROM customer
 WHERE customer_id IN
@@ -266,9 +264,8 @@ WHERE customer_id IN
          (SELECT MAX(rating) FROM review)
  );
  
---Q44. Write a SQL query to find sellers who sell products ordered by more than one customer.
-sql
-Copy code
+--Q44. Write a SQL query to find bottom 5 sellers who sell products ordered by one customer.
+
 SELECT seller_name
 FROM seller
 WHERE seller_id IN
@@ -277,12 +274,12 @@ WHERE seller_id IN
   FROM product p, cart c
   WHERE p.product_id = c.product_id
   GROUP BY p.seller_id
-  HAVING COUNT(DISTINCT c.customer_id) > 1
-);
+  HAVING COUNT(DISTINCT c.customer_id) = 1
+) AND ROWNUM <= 5
+ORDER BY seller_id desc;
 
 --Q45. Write a SQL query to find customers whose total order amount is greater than the average total order amount of all customers.
-sql
-Copy code
+
 SELECT customer_id
 FROM order_table
 GROUP BY customer_id
@@ -297,8 +294,7 @@ HAVING SUM(order_amount) >
 );
 
 --Q46. Write a SQL query to find products that were ordered in quantities greater than the average quantity ordered.
-sql
-Copy code
+
 SELECT product_id
 FROM orderitem
 GROUP BY product_id
@@ -308,8 +304,7 @@ HAVING SUM(quantity) >
   FROM orderitem
 );
 --Q47. Write a SQL query to find customers who live in the same city as the customer named 'Kedar'.
-sql
-Copy code
+
 SELECT c.FirstName
 FROM customer c, address a
 WHERE c.customer_id = a.customer_id
@@ -321,8 +316,7 @@ WHERE c.customer_id = a.customer_id
           AND c2.FirstName = 'Kedar'
       );
 --Q48. Write a SQL query to find sellers whose products have received an average rating greater than 4.
-sql
-Copy code
+
 SELECT seller_name
 FROM seller
 WHERE seller_id IN
@@ -333,6 +327,3 @@ WHERE seller_id IN
   GROUP BY p.seller_id
   HAVING AVG(r.rating) > 4
 );
-
-
-
